@@ -1,0 +1,250 @@
+Hello World!
+
+curl.exe http://169.254.169.254/latest/user-data
+dir C:\Cloud\InitLogs
+
+Get-Service -Name sshd
+Get-NetFirewallRule
+Get-Service -Name containerd
+Get-Content -Path C:\Cloud\InitLogs\04_extact_log
+dir $Env:ProgramFiles\containerd
+Get-Content -Path C:\k\config
+Get-Service -Name docker
+Get-Service -Name RemoteAccess
+Get-Service -Name CalicoNode
+Get-Service -Name CalicoFelix
+Get-Service -Name CalicoConfd
+Get-Service -Name kubelet
+Get-Service -Name kube-proxy
+Get-Content -Path C:\k\config
+Get-HnsNetwork
+
+
+Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1" -o install-docker-ce.ps1
+.\install-docker-ce.ps1
+# C:\install-calico-windows.ps1 -KubeVersion 1.27.3
+mkdir -force "C:\Program Files\containerd\cni\bin"
+mkdir -force "C:\Program Files\containerd\cni\conf"
+curl.exe -LO https://github.com/microsoft/windows-container-networking/releases/download/v0.2.0/windows-container-networking-cni-amd64-v0.2.0.zip
+Expand-Archive windows-container-networking-cni-amd64-v0.2.0.zip -DestinationPath "C:\Program Files\containerd\cni\bin" -Force
+Remove-Item windows-container-networking-cni-amd64-v0.2.0.zip
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force;
+Install-Module -Name HNS
+$Env:NODENAME="c1-win-node1"
+C:\install-calico-windows.ps1 -KubeVersion 1.27.3 -CalicoBackend windows-bgp
+Set-Service -Name CalicoFelix -StartupType Automatic
+Start-Service -Name CalicoFelix
+C:\CalicoWindows\kubernetes\install-kube-services.ps1
+Start-Service -Name kubelet
+Start-Service -Name kube-proxy
+Set-Service -Name kubelet -StartupType 'Automatic'
+Set-Service -Name kube-proxy -StartupType 'Automatic'
+cp C:\k\*.exe C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps
+cp C:\k\config ~\.kube\
+kubectl get nodes -o wide
+curl.exe -Lo "C:\k\kubeadm.exe" "https://dl.k8s.io/v1.27.3/bin/windows/amd64/kubeadm.exe"
+curl.exe -Lo "C:\k\kubectl.exe" "https://dl.k8s.io/release/v1.27.3/bin/windows/amd64/kubectl.exe"
+curl.exe -Lo "C:\k\kube-proxy.exe" https://dl.k8s.io/v1.16.2/bin/windows/amd64/kube-proxy.exe
+curl.exe -Lo "C:\k\kubelet.exe" https://dl.k8s.io/v1.16.2/bin/windows/amd64/kubelet.exe
+https://dl.k8s.io/v1.27.3/kubernetes-node-windows-amd64.tar.gz
+https://dl.k8s.io/v1.27.3/kubernetes-client-windows-arm64.tar.gz
+
+cd C:\Windows\Temp
+curl.exe -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.23.0/crictl-v1.23.0-windows-amd64.tar.gz
+tar xvf crictl-v1.23.0-windows-amd64.tar.gz
+mv crictl.exe "C:\k\"
+
+get-process
+wmic process get ProcessId,Description,ParentProcessId
+# # Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')) | Out-Null;
+# # New-Item -Path "C:\Cloud\InitLogs\09_chocko_installed" -ItemType File;
+# # 
+# # choco install vscode.install | Out-Null;
+# # New-Item -Path "C:\Cloud\InitLogs\10_vscode_installed" -ItemType File;
+
+   1 cmd /c mklink
+   2 cmd /c mklink /D C:\cni\net.d "C:\Program Files\containerd\cni\conf"
+   3 dir c\:
+   4 dir c:\
+   5 mkdir C:\cni\net.d
+   6 cmd /c mklink /D C:\cni\net.d "C:\Program Files\containerd\cni\conf"
+   7 cd C:\cni
+   8 ls
+   9 rm .\net.d\
+  10 ls
+  11 cmd /c mklink /D C:\cni\net.d "C:\Program Files\containerd\cni\conf"
+  12 tree
+  13 dir
+  14 cd ..
+  15 ls
+  16 rm cni
+  17 rm cni
+  18 cd .\etc\cni\
+  19 tree
+  20 rm .\net.d\
+  21 ls
+  22 cmd /c mklink /D C:\etc\cni\net.d "C:\Program Files\containerd\cni\conf"
+  23 dir
+  24 mkdir c:\opt\cni
+  25 cd c:\
+  26 cd .\opt\cni\
+  27 cmd /c mklink /D C:\opt\cni\bin "C:\Program Files\containerd\cni\bin"
+  28 dir
+  29 dir bin
+  30 restart-service containerd
+  31 get-service containerd
+  32 cd \
+  33 ctr run --cni --rm mcr.microsoft.com/windows/nanoserver:ltsc2022 test ipconfig
+  34 echo $env:Path
+  35 [Environment]::SetEnvironmentVariable("Path", "$($env:path);C:\Program Files\containerd", [System.EnvironmentVariableTarget]::Machine)
+  36 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
+  37 echo $env:Path
+  38 ctr run --cni --rm mcr.microsoft.com/windows/nanoserver:ltsc2022 test ipconfig
+  39 ctr i pull mcr.microsoft.com/windows/nanoserver:1809
+  40 ctr run --cni --rm mcr.microsoft.com/windows/nanoserver:1809 test ipconfig
+  41 kubectl get pods
+  42 dir C:\etc\cni\net.d\
+  43 cat  C:\etc\cni\net.d\10-calico.conf
+  44 mv C:\etc\cni\net.d\10-calico.conf \
+  45 ls
+  46 ctr run --cni --rm mcr.microsoft.com/windows/nanoserver:1809 test ipconfig
+  47 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  48 calicoctl version
+  49 kubectl apply -f https://docs.projectcalico.org/v3.26/manifests/calico.yaml
+  50 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
+  51 cat  C:\etc\cni\net.d\10-calico.conf
+  52 kubectl get pods -n calico-system
+  53 kubectl get pods
+  54 kubectl get pods
+  55 kubectl get pods
+  56 c:\install-calico-windows.ps1 -KubeVersion 1.27.3
+  57 c:\CalicoWindows\uninstall-calico.ps1
+  58 c:\install-calico-windows.ps1 -KubeVersion 1.27.3
+  59 c:\install-calico-windows.ps1 -KubeVersion 1.27.3
+
+  Add-WindowsFeature Containers,Hyper-V,Hyper-V-Tools,Hyper-V-PowerShell -Restart -IncludeManagementTools
+
+# Install PowerShell 7
+iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
+
+  Remove-Service -Name docker -Force
+  # delete from registry
+  sc.exe delete docker
+
+  Id CommandLine
+  -- -----------
+   1 C:\Users\Administrator\install-docker-ce.ps1
+   2 Get-HnsNetwork
+   3 docker -version
+   4 docker version
+   5 cd  \
+   6 New-Item -Path "C:\" -Name "k" -ItemType Directory;
+   7 cd C:\k\
+   8 curl.exe -Lo "https://dl.k8s.io/release/v1.27.3/bin/windows/amd64/kubectl.exe"
+   9 curl.exe -LO "https://dl.k8s.io/release/v1.27.3/bin/windows/amd64/kubectl.exe"
+  10 Invoke-WebRequest https://github.com/projectcalico/calico/releases/download/v3.26.1/install-calico-windows.ps1 ...
+  11 cd \
+  12 cd C:\k\
+  13 curl.exe -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.23.0/crictl-v1.23.0-windows-amd6...
+  14 tar xvf crictl-v1.23.0-windows-amd64.tar.gz
+  15 ls
+  16 Remove-Item .\crictl-v1.23.0-windows-amd64.tar.gz
+  17 ls
+  18 crictl.exe
+  19 .\crictl.exe pull mcr.microsoft.com/windows/nanoserver:1809
+  20 Invoke-WebRequest -Uri https://github.com/Mirantis/cri-dockerd/releases/download/v0.2.0/cri-dockerd-v0.2.0-wind...
+  21 Expand-Archive -LiteralPath cri-docker.zip -DestinationPath .
+  22 Expand-Archive -Path cri-docker.zip -DestinationPath .
+  23 ls
+  24 Expand-Archive -Path cri-dockerd.zip -DestinationPath .
+  25 ls
+  26 Move-Item -Path cri-dockerd.exe -Destination C:\Windows\System32
+  27 cri-dockerd --help
+  28 nssm install cri-dockerd
+  29 cri-dockerd --help
+  30 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System....
+  31 choco --help
+  32 choko install nssm
+  33 choco install nssm
+  34 choco install vscode.install
+  35 nssm install cri-dockerd
+  36 Set-Service -Name cri-dockerd -StartupType 'Automatic'
+  37 Start-Service -Name cri-dockerd
+  38 Get-Service -Name cri-dockerd
+  39 .\crictl.exe pull mcr.microsoft.com/windows/nanoserver:1809
+  40 .\crictl.exe --runtime-endpoint=npipe://./pipe/cri-dockerd pull mcr.microsoft.com/windows/nanoserver:1809
+  41 $env:CONTAINER_RUNTIME_ENDPOINT="npipe://./pipe/cri-dockerd"
+  42 .\crictl.exe pull mcr.microsoft.com/windows/nanoserver:1809
+  43 Get-HnsNetwork
+  44 cd ..
+  45 md test
+  46 cd C:\test\
+  47 $POD_ID=(crictl runp .\pod.json)
+  48 $POD_ID=(c:\k\crictl.exe runp .\pod.json)
+  49 $CONTAINER_ID=((c:\k\crictl.exe...
+  50 $CONTAINER_ID=((c:\k\crictl.exe create $POD_ID .\container.json .\pod.json)...
+  51 $CONTAINER_ID=((c:\k\crictl.exe create $POD_ID .\container.json .\pod.json))
+  52 c:\k\crictl.exe start $CONTAINER_ID
+  53 $POD_ID=(crictl runp .\pod.json)
+  54 $POD_ID=(crictl --runtime-endpoint=npipe://./pipe/cri-dockerd runp .\pod.json)
+  55 cd\
+  56 docker images
+  57 docker run -it mcr.microsoft.com/windows/nanoserver:1809 cmd.exe
+  58 docker pull mcr.microsoft.com/windows/nanoserver:ltsc2022
+  59 docker run -it mcr.microsoft.com/windows/nanoserver:ltsc2022 cmd.exe
+  60 ls
+  61 $POD_ID=(crictl runp .\pod.json)
+  62 cd .\test\
+  63 $POD_ID=(crictl runp .\pod.json)
+  64 docker ps -a
+  65 docker container ls
+  66 docker container ls -a
+  67 cd ..
+  68 ls
+
+  # Ne rabotaet
+  npipe:////./pipe/containerd 
+  & dockerd --register-service --service-name docker --cri-containerd
+
+  Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/latest/download/calicoctl-windows-amd64.exe" -OutFile kubectl-calico.exe
+ kubectl calico -h
+
+  69 cd C:\test\
+  70 curl.exe -LO https://github.com/microsoft/windows-container-networking/releases/download/v0.2.0/windows-container-networking-cni-amd64-v0.2.0.zip
+  71 Expand-Archive windows-container-networking-cni-amd64-v0.2.0.zip -DestinationPath "C:\Program Files\containerd\cni\bin" -Force
+  72 Restart-Service containerd
+
+  39 mkdir c:\opt\cni
+  40 mkdir C:\etc\cni
+  41 cmd /c mklink /D C:\etc\cni\net.d "C:\Program Files\containerd\cni\conf"
+  42 cmd /c mklink /D C:\opt\cni\bin "C:\Program Files\containerd\cni\bin"
+
+   5 mkdir -force "C:\Program Files\containerd\cni\bin"
+   6 mkdir -force "C:\Program Files\containerd\cni\conf"
+
+  32 [Environment]::SetEnvironmentVariable("Path", "$($env:path);C:\Program Files\containerd;C:\k\;", [System.EnvironmentVariableTarget]::Machine)
+  33 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
+  34 echo $Env:Path
+
+  62 cd c:\k
+  63 Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/latest/download/calicoctl-windows-amd64.exe" -OutFile kubectl-calico.exe
+
+curl.exe -o crictl.tgz -LO "https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.23.0/crictl-v1.23.0-windows-amd64.tar.gz"
+tar -xvf crictl.tgz -C "C:\Program Files\containerd"
+
+New-HnsNetwork -Name nat -Type nat
+
+On master node!!!!
+calicoctl ipam configure --strictaffinity=true
+
+When DNS doesn't work 
+kubectl rollout restart -n kube-system deployment/coredns
+kubectl edit DaemonSet calico-node -n kube-system
+calicoctl node status
+calicoctl get nodes -o yaml
+calicoctl get bgppeers
+
+Install-WindowsFeature RemoteAccess
+Install-WindowsFeature RSAT-RemoteAccess-PowerShell
+Install-WindowsFeature Routing
+Install-RemoteAccess -VpnType RoutingOnly

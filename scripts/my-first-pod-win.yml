@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myfirstservicewin
+  labels:
+    app: winweb
+spec:
+  ports:
+    # the port that this service should serve on
+    - protocol: TCP
+      nodePort: 30001
+      port: 8001
+      targetPort: 80
+  selector:
+    app: winweb
+  type: NodePort
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myfirstpodwin
+  labels:
+    app: winweb
+spec:
+  dnsPolicy: "None"
+  dnsConfig:
+    nameservers:
+      - 8.8.8.8
+      - 10.96.0.10
+  containers:
+    - name: myfirstcontainerwin
+      image: georgbuexel/my-apache-nanoserver
+      ports:
+        - containerPort: 80
+      env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: HOST
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: USERNAME
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: NAME
+  nodeSelector:
+    kubernetes.io/os: windows
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: winpod
+  labels:
+    app: winpod
+spec:
+  containers:
+    - name: wincontainer
+      image: mcr.microsoft.com/windows/server
+      ports:
+        - containerPort: 80
+  nodeSelector:
+    kubernetes.io/os: windows
